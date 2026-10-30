@@ -1,0 +1,17 @@
+# Dados e segredos fora do repositório
+dados/
+*.zip
+*.parquet
+*.csv
+.env
+.env*
+*.key
+
+# Python
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# Sistema
+.DS_Store
