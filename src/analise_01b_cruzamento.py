@@ -1,8 +1,8 @@
 """Análise 1b: pagantes ativos no corte com TODAS as colunas de usuarios.csv. Colaborador 1.
 
 Parte do mesmo filtro da análise 1 (ativas, sem contas de teste = 14.753) e junta usuarios.csv
-inteiro pela esquerda. Valores originais são mantidos; as versões padronizadas entram em
-colunas novas (sufixo _padrao) e as datas suspeitas ficam só marcadas (flags), sem remoção.
+inteiro pela esquerda. As colunas sexo, sistema e cidade são substituídas pela versão padronizada (mesmo nome);
+os valores originais continuam em dados/brutos/. As datas suspeitas ficam só marcadas (flags).
 Saída: dados/processados/pagantes_ativos_corte.csv. Dados brutos não são alterados.
 """
 
@@ -63,6 +63,11 @@ for v in desconhecidas:  # cidades que já estavam corretas: mantém o texto ori
 p["sexo_padrao"] = chave(p["sexo"]).map(SEXO)
 p["sistema_padrao"] = chave(p["sistema"]).map(SISTEMA)
 
+# troca as colunas originais pelas padronizadas, com o nome original
+original = {c: p[c].copy() for c in ["sexo", "sistema", "cidade"]}  # só para o relatório abaixo
+p = p.drop(columns=["sexo", "sistema", "cidade"]).rename(
+    columns={"sexo_padrao": "sexo", "sistema_padrao": "sistema", "cidade_padrao": "cidade"})
+
 # datas: só marcar
 cad = pd.to_datetime(p["data_cadastro"], errors="coerce")
 nas = pd.to_datetime(p["data_nascimento"].replace("", pd.NA), errors="coerce")
@@ -71,13 +76,24 @@ p["flag_nascimento_invalido"] = (nas > CORTE) | (nas < "1920-01-01")
 
 # relatório de conferência
 print("\nlinhas:", len(p), "| colunas:", p.shape[1])
-print("cidades:", p["cidade_padrao"].nunique(), "| sem mapa:", int(p["cidade_padrao"].isna().sum()))
-for col in ["sexo", "sexo_padrao", "sistema", "sistema_padrao", "canal_aquisicao", "relogio_conectado"]:
+print("cidades:", p["cidade"].nunique(), "| sem mapa:", int(p["cidade"].isna().sum()))
+for col in ["sexo", "sistema", "canal_aquisicao", "relogio_conectado"]:
     print(f"\n{col}:\n{p[col].value_counts(dropna=False).to_string()}")
-print("\ncidade 'RJ'/'SP' vs uf:\n", pd.crosstab(p.loc[chave(p['cidade']).isin(['rj', 'sp']), 'cidade'], p['uf']).to_string())
+print("\ncidade original 'RJ'/'SP' vs uf:\n", pd.crosstab(original["cidade"][chave(original["cidade"]).isin(["rj", "sp"])], p["uf"]).to_string())
 print("\nflags:", p[["flag_cadastro_apos_corte", "flag_nascimento_invalido"]].sum().to_dict(),
       "| nascimento vazio:", int((p["data_nascimento"] == "").sum()))
-print("\nuf x cidade_padrao (cidades por uf):\n", p.groupby("uf")["cidade_padrao"].nunique().to_string())
+print("\nuf x cidade (cidades por uf):\n", p.groupby("uf")["cidade"].nunique().to_string())
+
+# garantias (o script para se alguma falhar)
+ativos_esperados = set(a.loc[a["status_atual"].str.strip().str.lower() == "ativa", "user_id"]) - set(u.loc[u["teste"], "user_id"])
+assert set(p["user_id"]) == ativos_esperados and len(p) == len(ativos_esperados), "faltam ou sobram pagantes ativos"
+cols_esperadas = set(a.columns) | (set(u.columns) - {"teste"})
+assert cols_esperadas <= set(p.columns), f"colunas faltando: {cols_esperadas - set(p.columns)}"
+bruto_nasc = u.set_index("user_id")["data_nascimento"].reindex(p["user_id"]).to_numpy()
+assert (p["data_nascimento"].to_numpy() == bruto_nasc).all(), "data_nascimento foi alterada"
+print("\ngarantias ok: todos os pagantes ativos presentes, todas as colunas, data_nascimento igual ao bruto")
+print("nascimento vazio mantido:", int((p["data_nascimento"] == "").sum()),
+      "| inválido mantido (com flag):", int(p["flag_nascimento_invalido"].sum()))
 
 PROCESSADOS.mkdir(exist_ok=True)
 p.to_csv(PROCESSADOS / "pagantes_ativos_corte.csv", index=False, encoding="utf-8")
