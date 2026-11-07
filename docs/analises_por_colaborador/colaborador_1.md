@@ -96,7 +96,7 @@ Não altere nada em dados/brutos/.
 - O retrato erraria 823 (37%): é o tamanho do vazamento.
 - **Armadilha:** assinatura anterior a 01/07/2024 não tem evento de início; sem desligamento até 31/07, a renovação estava ligada.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões
+- Contagens obtidas: 32.643 → 14.813 ativas → 2.310 com renovação `nao` → 2.250 sem contas de teste. Em 31/07: 1.427 desligadas, 754 ligadas, 69 ainda não assinavam. O retrato erra 823 (36,6%). Detalhes em `saidas/vazamento_renovacao_31jul.md`.
+- Divergências em relação ao "Confira": nenhuma.
+- Decisões para o `decisoes.md`: 7 (fuso), 8 (início antes de 01/07/2024 e último evento) e 9 (`cancelamento_web`, sem efeito na contagem).
