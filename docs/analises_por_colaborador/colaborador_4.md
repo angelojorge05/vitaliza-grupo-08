@@ -34,10 +34,10 @@ Salve em saidas/inventario.md, uma seção por arquivo.
 - `usuarios.csv` com 64.948 linhas (o `wc -l` dá 64.949, com o cabeçalho); `atividades.parquet` com 1.254.475.
 - Nada mudou em `dados/brutos/`.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude)
+- Contagens obtidas: `src/inventario.py` reexecutado sem alteração; para os 12 arquivos tabulares a saída é **idêntica** ao `saidas/inventario.md` commitado (diff vazio fora do carimbo de data) — mesmas linhas, células faltantes e as 8 divergências consolidadas. Conferência manual: `wc -l usuarios.csv` = 64.949 (64.948 + cabeçalho); parquet = 1.254.475 (pyarrow); 60 linhas `plano_atual=cortesia` = 60 `canal_cobranca=interno`. Integridade: "OK, nada alterado".
+- Divergências em relação ao "Confira": nenhuma nos tabulares. **Ressalva:** as duas entradas de heatmaps (ZIPs de 12.426 e 13.047 PNGs) não foram conferidas nesta rodada — os ZIPs não estavam no disco local; o `inventario.md` do repositório foi mantido como está.
+- Decisões para o `decisoes.md`: nenhuma nova (o inventário só marca; as divergências já estão listadas nele).
 
 ---
 
@@ -64,10 +64,10 @@ Não altere nada em dados/brutos/.
 - Opcionais no dicionário: `objetivo_texto` e `como_conheceu`.
 - **Armadilha:** `nivel` (7,1%) e `dias_por_semana` (10,0%) também têm vazios, e o dicionário não diz que são opcionais.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude)
+- Contagens obtidas: `src/vazios_onboarding.py` reexecutado: 63.929 linhas = 63.929 user_id únicos, 0 repetidos; `objetivo_texto` **5.467 vazias (8,6%)**, todas nulas, nenhuma só com espaços; `como_conheceu` 4.586 (7,2%); `nivel` **4.513 (7,1%)**; `dias_por_semana` **6.368 (10,0%)**. Conferência manual independente (pandas direto): 63.929 / 5.467 / 4.513 / 6.368 — idêntico. Achado adicional do script: o marcador `-` aparece 1.322× em `objetivo_texto` e 1.190× em `como_conheceu` (não contado como vazio).
+- Divergências em relação ao "Confira": **nenhuma**; armadilha confirmada (`nivel` e `dias_por_semana` têm vazios e o dicionário não os marca como opcionais).
+- Decisões para o `decisoes.md`: marcar vazios de `objetivo_texto`/`como_conheceu` como "sem resposta" (opcionais por desenho), incluindo o traço `-`; marcar vazios de `nivel` e `dias_por_semana` como categoria "não informado" para a modelagem. 0 linhas removidas.
 
 ---
 
@@ -95,7 +95,7 @@ Não remova nada nem altere dados/brutos/.
 - 1,5 × IQR: 81.775 treinos acima de 17,08 km, 73.120 de pedal (com `ride`).
 - |z| > 3: 956 acima de 191,6 km. **A regra marca; o grupo decide.**
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude, `src/distribuicao_distancias.py`)
+- Contagens obtidas: **679.640** treinos com distância; 45,9% na classe 5–10 km (30,6% em 0–5); Q1 **4,58** · mediana **6,47** · Q3 **9,58** · IQR **5,00**. Regra Q3+1,5×IQR (>17,08 km): **81.775** marcados, sendo **73.120 de pedal** (com `ride`), 8.355 corrida, 300 caminhada. Regra |z|>3 (>191,60 km; média 11,15, dp 60,15): **956** marcados (555 corrida, 274 caminhada, 127 pedal). Saídas: `saidas/distribuicao_distancias.md` e `.png`.
+- Divergências em relação ao "Confira": **nenhuma**.
+- Decisões para o `decisoes.md`: as duas regras **marcam**, nada é removido. Proposta: excluir dos agregados/correlações apenas os fisicamente impossíveis (>200 km, análise 3 — os 555 de corrida são os que derrubam o r de 0,88 para 0,12); os 81.775 do IQR são longos porém plausíveis e permanecem.

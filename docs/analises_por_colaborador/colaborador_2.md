@@ -34,10 +34,10 @@ Não altere nada em dados/brutos/.
 - 3.649 treinos com duração zero; nenhum negativo.
 - **Armadilha:** os 574.835 sem distância não são erro; não tinham GPS.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude, `src/validade_atividades.py`)
+- Contagens obtidas: 1.254.475 treinos; 679.640 com distância (54,2%); mediana 6,47 km; **951 acima de 200 km** (maior: 10.012,75 km, pedal de 160 min do `apple_health`); **3.649 com duração zero**, nenhum negativo. Por tipo (>200 km): corrida+run 555, caminhada+walk 269, pedal+ride 127; por origem: app 673, garmin 146, apple_health 132.
+- Divergências em relação ao "Confira": **nenhuma** — todos os valores batem.
+- Decisões para o `decisoes.md`: marcar os 951 (>200 km) como fisicamente impossíveis e os 3.649 (duração 0) como inválidos para agregados de engajamento; os 574.835 sem distância ficam como estão (ausência de GPS, não erro). Nada removido do bruto.
 
 ---
 
@@ -62,10 +62,10 @@ Não altere nada em dados/brutos/.
 - Os nomes em inglês (376.930 treinos, 30%) vêm todos da origem `app`.
 - **Armadilha:** contar só `corrida` deixa fora 162.108 corridas.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude, `src/consistencia_tipos.py`)
+- Contagens obtidas: **11 valores para 7 tipos**; em inglês: run 162.108, walk 88.509, strength 85.548, ride 40.765 = **376.930 (30,0%)**, todos da origem `app`. Depois do mapa (run→corrida, walk→caminhada, ride→pedal, strength→forca): corrida 385.926, caminhada 206.533, forca 198.252, funcional 145.476, yoga 113.849, hiit 109.934, pedal 94.505.
+- Divergências em relação ao "Confira": **nenhuma**.
+- Decisões para o `decisoes.md`: corrigir (padronizar PT) **só em cópia processada**, nunca no bruto; mapa proposto acima, 376.930 linhas afetadas, 0 removidas. Toda contagem por tipo no projeto deve usar o tipo canônico (contar só `corrida` deixaria 162.108 de fora).
 
 ---
 
@@ -91,7 +91,7 @@ Não remova nada nem altere dados/brutos/.
 - Nos pares, a distância também é igual.
 - **Armadilha:** o `garmin` grava o início 3 horas à frente (UTC). Sem corrigir o fuso, só aparecem os 4.184 do `apple_health`.
 
-### Resultado e decisões (preencher)
-- Contagens obtidas:
-- Divergências em relação ao "Confira":
-- Decisões para o `decisoes.md`:
+### Resultado e decisões (07/11/2026, Felipe · execução Claude, `src/unicidade_duplicados.py`)
+- Contagens obtidas: candidatos (conta+tipo canônico+duração) 16.039 → com início ≤5 min já com o fuso do garmin corrigido (UTC−3h): **9.383 pares únicos = 5.199 garmin + 4.184 apple_health**; a distância é igual nos 9.383. Armadilha reproduzida: sem corrigir o fuso só aparecem os 4.184 do apple_health.
+- Divergências em relação ao "Confira": **nenhuma**. Observação de método: o par exige o tipo na forma canônica (análise 4), porque o app grava 30% em inglês e o relógio em português.
+- Decisões para o `decisoes.md`: marcar os 9.383 pares como o mesmo treino registrado duas vezes; em cópias processadas e agregados, manter 1 registro por par (proposta: o do relógio, que traz `fc_media`); efeito nos agregados: 1.254.475 → 1.245.092 treinos. Bruto intacto.
