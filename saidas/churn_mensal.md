@@ -85,7 +85,7 @@ Para cada assinatura encerrada com `data_fim` desde 01/07/2024 (17.830), comparo
 | # | Data | Arquivo | Problema | Decisão (corrigir/remover/marcar) | Motivo | Efeito na contagem (antes → depois) |
 |---|------|---------|----------|-----------------------------------|--------|-------------------------------------|
 | 31 | 09/11/2026 | assinaturas.csv | definição do churn mensal | calcular a série de `inicio`/`data_fim` de `assinaturas.csv`, sem as contas de cortesia/teste; toda `data_fim` conta como perda (renovação desligada, falha de pagamento, chargeback, reembolso) | reproduz os números do case (8.540 ativos em jan/2025; abril/2026 = 1.154 sobre 14.237) | 32.643 → 32.583 assinaturas; 21 meses; 15.879 perdas |
-| 32 | 09/11/2026 | eventos_assinatura.csv | `data_fim` e o evento de fim nem sempre caem no mesmo dia | usar os eventos só para conferir, sem corrigir `data_fim` | divergência medida na seção 4: mesmo dia 17.830, mesmo mês 0, outro mês 0, sem evento 0 de 17.830 | 0 linhas alteradas |
+| 32 | 09/11/2026 | eventos_assinatura.csv | conferir se `data_fim` de `assinaturas.csv` concorda com o evento de fim (17.830 encerradas desde 01/07/2024) | manter `data_fim` como fonte da série; eventos só para conferir (nada a corrigir) | divergência medida na seção 4: mesmo dia 17.830, mesmo mês 0, outro mês 0, sem evento 0 de 17.830 | 0 linhas alteradas |
 
 ---
 Conferência: brutos inalterados.
