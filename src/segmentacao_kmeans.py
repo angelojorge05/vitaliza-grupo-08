@@ -362,7 +362,7 @@ def main() -> None:
               "- **Campanha por grupo:** entre os sorteados, os quatro braços têm proporções parecidas em cada grupo; a diferença está em `fora_da_campanha`, maior no grupo 3 porque ele tem mais assinantes que chegaram depois de 10/08.",
               "- **Grupo 4 e o teto da recência:** 90 dias é o teto de quem não treinou na janela; o grupo 4 é, na prática, quem não treinou em 90 dias.",
               "- **Incompletas:** as 3.721 contas sem perfil completo têm o mesmo comportamento das completas (maior |SMD| 0,03) e foram classificadas pelo centro mais próximo, em proporções parecidas.\n",
-              "## 10. Decisões propostas (formato do `decisoes.md`, não gravadas)\n",
+              "## 10. Decisões 39 a 41 (gravadas no `decisoes.md` em 10/11/2026)\n",
               "| # | Data | Arquivo | Problema | Decisão (corrigir/remover/marcar) | Motivo | Efeito na contagem (antes → depois) |",
               "|---|------|---------|----------|-----------------------------------|--------|-------------------------------------|",
               f"| 39 | 10/11/2026 | base_master | contas sem perfil ou onboarding completo na segmentação | formar os grupos só com as contas completas (sem idade inválida e sem sexo, nível ou dias por semana não informados); classificar as incompletas depois pelo centro mais próximo | pedido do usuário; o viés medido é desprezível (maior SMD {g(smd_max, 2)}) | {n(len(a))} → {n(len(comp))} formam os grupos; {n(len(inc))} classificadas depois |",
