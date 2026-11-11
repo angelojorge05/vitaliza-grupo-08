@@ -4,3 +4,6 @@ pyarrow==26.0.0
 python-dateutil==3.0.0
 six==1.17.0
 tzdata==2026.6
+plotly==7.1.0
+ipykernel==7.4.0
+nbformat==5.11.1
